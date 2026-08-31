@@ -1,0 +1,444 @@
+
+<style>
+  .guide-wrap { font-family: var(--font-sans); max-width: 680px; padding: 1.5rem 0; }
+  .hero { background: var(--surface-1); border-radius: 12px; border: 0.5px solid var(--border); padding: 2rem; margin-bottom: 2rem; }
+  .hero h1 { font-size: 22px; font-weight: 500; color: var(--text-primary); margin: 0 0 0.5rem; }
+  .hero p { font-size: 15px; color: var(--text-secondary); margin: 0; line-height: 1.7; }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1rem; }
+  .badge { font-size: 12px; padding: 4px 10px; border-radius: var(--radius); font-weight: 500; }
+  .badge-blue { background: var(--bg-accent); color: var(--text-accent); }
+  .badge-green { background: var(--bg-success); color: var(--text-success); }
+  .badge-warn { background: var(--bg-warning); color: var(--text-warning); }
+  .toc { background: var(--surface-1); border-radius: 12px; border: 0.5px solid var(--border); padding: 1.5rem; margin-bottom: 2rem; }
+  .toc h2 { font-size: 13px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 1rem; }
+  .toc-item { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 0.5px solid var(--border); cursor: pointer; }
+  .toc-item:last-child { border-bottom: none; }
+  .toc-num { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; flex-shrink: 0; }
+  .toc-num.intro { background: #EEEDFE; color: #3C3489; }
+  .toc-num.docker { background: #E1F5EE; color: #0F6E56; }
+  .toc-num.s1 { background: #E6F1FB; color: #185FA5; }
+  .toc-num.s2 { background: #FAECE7; color: #993C1D; }
+  .toc-num.s3 { background: #EAF3DE; color: #3B6D11; }
+  .toc-num.s4 { background: #FBEAF0; color: #993556; }
+  .toc-num.s5 { background: #FAEEDA; color: #854F0B; }
+  .toc-num.s6 { background: #FCEBEB; color: #A32D2D; }
+  .toc-label { font-size: 15px; color: var(--text-primary); }
+  .toc-sub { font-size: 12px; color: var(--text-secondary); }
+  .section { margin-bottom: 2.5rem; border-radius: 12px; border: 0.5px solid var(--border); overflow: hidden; }
+  .section-header { padding: 1.25rem 1.5rem; display: flex; align-items: center; gap: 12px; border-bottom: 0.5px solid var(--border); }
+  .section-header.intro { background: #EEEDFE; }
+  .section-header.docker { background: #E1F5EE; }
+  .section-header.s1 { background: #E6F1FB; }
+  .section-header.s2 { background: #FAECE7; }
+  .section-header.s3 { background: #EAF3DE; }
+  .section-header.s4 { background: #FBEAF0; }
+  .section-header.s5 { background: #FAEEDA; }
+  .section-header.s6 { background: #FCEBEB; }
+  .section-title { font-size: 18px; font-weight: 500; color: var(--text-primary); margin: 0; }
+  .section-body { padding: 1.5rem; background: var(--surface-2); }
+  .section-body p { font-size: 15px; line-height: 1.7; color: var(--text-primary); margin: 0 0 1rem; }
+  .section-body p:last-child { margin-bottom: 0; }
+  .analogy { background: var(--surface-1); border-left: 3px solid var(--border-accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 0.75rem 1rem; margin: 1rem 0; }
+  .analogy-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-accent); margin-bottom: 4px; }
+  .analogy p { font-size: 14px; color: var(--text-secondary); margin: 0; }
+  .code-block { background: var(--surface-0); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1rem; margin: 1rem 0; font-family: var(--font-mono); font-size: 13px; color: var(--text-primary); line-height: 1.6; overflow-x: auto; }
+  .code-comment { color: var(--text-muted); }
+  .cmd { color: var(--text-accent); }
+  .concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin: 1rem 0; }
+  .concept-card { background: var(--surface-1); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 0.75rem 1rem; }
+  .concept-card .term { font-size: 13px; font-weight: 500; color: var(--text-primary); margin-bottom: 4px; }
+  .concept-card .def { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+  .q-section { background: var(--surface-1); border-radius: 12px; border: 0.5px solid var(--border-warning); margin-top: 1.5rem; overflow: hidden; }
+  .q-header { background: var(--bg-warning); padding: 0.75rem 1.25rem; display: flex; align-items: center; gap: 8px; }
+  .q-header span { font-size: 13px; font-weight: 500; color: var(--text-warning); }
+  .q-body { padding: 1rem 1.25rem; }
+  .q-item { padding: 0.75rem 0; border-bottom: 0.5px solid var(--border); }
+  .q-item:last-child { border-bottom: none; }
+  .q-num { font-size: 11px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .q-text { font-size: 14px; color: var(--text-primary); line-height: 1.6; }
+  .divider { height: 0.5px; background: var(--border); margin: 1rem 0; }
+  .step-row { display: flex; gap: 10px; align-items: flex-start; margin: 0.5rem 0; }
+  .step-dot { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; flex-shrink: 0; margin-top: 2px; }
+  .step-dot.blue { background: #E6F1FB; color: #185FA5; }
+  .step-dot.green { background: #EAF3DE; color: #3B6D11; }
+  .step-dot.coral { background: #FAECE7; color: #993C1D; }
+  .step-dot.purple { background: #EEEDFE; color: #3C3489; }
+  .step-dot.amber { background: #FAEEDA; color: #854F0B; }
+  .step-dot.red { background: #FCEBEB; color: #A32D2D; }
+  .step-text { font-size: 14px; color: var(--text-primary); line-height: 1.6; }
+  .tip { background: var(--bg-success); border-radius: var(--radius); padding: 0.6rem 0.9rem; margin: 0.75rem 0; }
+  .tip-text { font-size: 13px; color: var(--text-success); }
+  h3.sub { font-size: 15px; font-weight: 500; color: var(--text-primary); margin: 1rem 0 0.5rem; }
+</style>
+
+<div class="guide-wrap">
+
+  <div class="hero">
+    <h1>Kubernetes: from zero to cluster</h1>
+    <p>A beginner-friendly guide that connects Docker fundamentals to Kubernetes orchestration — written for first-timers and structured for easy classroom use.</p>
+    <div class="badge-row">
+      <span class="badge badge-blue">Beginner friendly</span>
+      <span class="badge badge-green">Includes Docker brush-up</span>
+      <span class="badge badge-warn">Scenario questions</span>
+    </div>
+  </div>
+
+  <div class="toc">
+    <h2>Contents</h2>
+    <div class="toc-item"><span class="toc-num intro">0</span><div><div class="toc-label">What is Kubernetes? (Context)</div><div class="toc-sub">The big picture before we dive in</div></div></div>
+    <div class="toc-item"><span class="toc-num docker">D</span><div><div class="toc-label">Docker brush-up</div><div class="toc-sub">Containers, images, and why they matter</div></div></div>
+    <div class="toc-item"><span class="toc-num s1">1</span><div><div class="toc-label">Create a Kubernetes cluster</div><div class="toc-sub">Nodes, control planes, and minikube</div></div></div>
+    <div class="toc-item"><span class="toc-num s2">2</span><div><div class="toc-label">Deploy an app</div><div class="toc-sub">Deployments, pods, kubectl</div></div></div>
+    <div class="toc-item"><span class="toc-num s3">3</span><div><div class="toc-label">Explore your app</div><div class="toc-sub">Inspecting pods, logs, and state</div></div></div>
+    <div class="toc-item"><span class="toc-num s4">4</span><div><div class="toc-label">Expose your app publicly</div><div class="toc-sub">Services, ClusterIP, NodePort, LoadBalancer</div></div></div>
+    <div class="toc-item"><span class="toc-num s5">5</span><div><div class="toc-label">Scale your app</div><div class="toc-sub">Replicas and horizontal scaling</div></div></div>
+    <div class="toc-item"><span class="toc-num s6">6</span><div><div class="toc-label">Update your app</div><div class="toc-sub">Rolling updates and rollbacks</div></div></div>
+  </div>
+
+  <!-- SECTION 0: CONTEXT -->
+  <div class="section">
+    <div class="section-header intro">
+      <span class="toc-num intro" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;">0</span>
+      <h2 class="section-title">What is Kubernetes?</h2>
+    </div>
+    <div class="section-body">
+      <p>Imagine you have a web app running inside a Docker container. Great — one container, one machine, it works. But now your app gets popular. One machine can't handle the traffic. What do you do?</p>
+      <p>You need to run <strong>many copies</strong> of your container across <strong>many machines</strong> — and something needs to manage all of them: restart crashed containers, spread traffic, roll out updates without downtime. That "something" is <strong>Kubernetes</strong> (often written as K8s).</p>
+      <div class="analogy">
+        <div class="analogy-label">Analogy</div>
+        <p>Docker is like a single chef cooking a dish. Kubernetes is the restaurant manager — scheduling chefs, handling rush hours, replacing anyone who calls in sick, and making sure every table gets served.</p>
+      </div>
+      <p>Kubernetes was originally built at Google, open-sourced in 2014, and is now maintained by the CNCF (Cloud Native Computing Foundation). Every major cloud provider — AWS, GCP, Azure — has a managed Kubernetes service.</p>
+      <div class="concept-grid">
+        <div class="concept-card"><div class="term">Orchestration</div><div class="def">Automating deployment, scaling, and management of containers</div></div>
+        <div class="concept-card"><div class="term">K8s</div><div class="def">Shorthand for Kubernetes (8 letters between K and s)</div></div>
+        <div class="concept-card"><div class="term">CNCF</div><div class="def">Cloud Native Computing Foundation — the open-source home of K8s</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION D: DOCKER -->
+  <div class="section">
+    <div class="section-header docker">
+      <span class="toc-num docker" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;">D</span>
+      <h2 class="section-title">Docker brush-up — containers & images</h2>
+    </div>
+    <div class="section-body">
+      <p>Before Kubernetes makes sense, you need a mental model of what it's actually managing: <strong>containers</strong>.</p>
+      <h3 class="sub">The problem containers solve</h3>
+      <p>Classic problem: "It works on my machine." Your app runs fine locally, breaks in production because the server has a different Python version, different OS libraries, different everything. Containers fix this by bundling your app <em>and everything it needs</em> into one portable unit.</p>
+      <div class="analogy">
+        <div class="analogy-label">Analogy</div>
+        <p>A container is like a shipping container — standardized, self-contained, works on any ship (server), any port (cloud). The contents don't care where they end up.</p>
+      </div>
+      <h3 class="sub">Images vs. containers</h3>
+      <div class="concept-grid">
+        <div class="concept-card"><div class="term">Image</div><div class="def">A read-only blueprint/template. Like a class in OOP. Defined in a Dockerfile.</div></div>
+        <div class="concept-card"><div class="term">Container</div><div class="def">A running instance of an image. Like an object created from a class. Has its own filesystem and process.</div></div>
+        <div class="concept-card"><div class="term">Dockerfile</div><div class="def">A script of instructions to build an image — what OS, what dependencies, what code to run.</div></div>
+        <div class="concept-card"><div class="term">Registry</div><div class="def">A store for images. Docker Hub is the public one. Think of it like GitHub but for container images.</div></div>
+      </div>
+      <h3 class="sub">Key Docker commands (for reference)</h3>
+      <div class="code-block">
+<span class="code-comment"># Pull an image from Docker Hub</span>
+<span class="cmd">docker pull nginx</span>
+
+<span class="code-comment"># Run a container from an image</span>
+<span class="cmd">docker run -d -p 8080:80 nginx</span>
+
+<span class="code-comment"># List running containers</span>
+<span class="cmd">docker ps</span>
+
+<span class="code-comment"># Stop a container</span>
+<span class="cmd">docker stop &lt;container-id&gt;</span>
+
+<span class="code-comment"># Build an image from a Dockerfile</span>
+<span class="cmd">docker build -t my-app:1.0 .</span>
+      </div>
+      <h3 class="sub">Where Docker ends and Kubernetes begins</h3>
+      <p>Docker is great for running containers on <em>one machine</em>. But it has no built-in way to:</p>
+      <div class="step-row"><span class="step-dot coral">✗</span><span class="step-text">Automatically restart a crashed container on a different machine</span></div>
+      <div class="step-row"><span class="step-dot coral">✗</span><span class="step-text">Spread containers across 10 servers and balance traffic between them</span></div>
+      <div class="step-row"><span class="step-dot coral">✗</span><span class="step-text">Roll out a new version of your app with zero downtime</span></div>
+      <p style="margin-top:1rem;">This is exactly what Kubernetes was built for. You describe what you want — "run 5 copies of my app, always" — and Kubernetes makes it happen and keeps it that way.</p>
+      <div class="tip"><span class="tip-text">Key insight: Kubernetes doesn't replace Docker. It uses Docker (or another container runtime) under the hood — it just manages containers at scale.</span></div>
+    </div>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section">
+    <div class="section-header s1">
+      <span class="toc-num s1" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;">1</span>
+      <h2 class="section-title">Create a Kubernetes cluster</h2>
+    </div>
+    <div class="section-body">
+      <p>A <strong>cluster</strong> is the foundation of Kubernetes — a group of machines (physical or virtual) that work together to run your containers.</p>
+      <h3 class="sub">Anatomy of a cluster</h3>
+      <div class="concept-grid">
+        <div class="concept-card"><div class="term">Control Plane (Master)</div><div class="def">The brain. Decides what runs where, monitors health, handles API requests. You don't run your app here.</div></div>
+        <div class="concept-card"><div class="term">Worker Node</div><div class="def">The muscle. Actual machines that run your containers. A cluster can have 1 to thousands of nodes.</div></div>
+        <div class="concept-card"><div class="term">kube-apiserver</div><div class="def">The front door to the control plane. Every command you run goes through it.</div></div>
+        <div class="concept-card"><div class="term">etcd</div><div class="def">Kubernetes' database. Stores all cluster state — what's running, what's supposed to run.</div></div>
+        <div class="concept-card"><div class="term">kubelet</div><div class="def">An agent running on every worker node. Ensures containers are running as instructed.</div></div>
+        <div class="concept-card"><div class="term">kubectl</div><div class="def">Your command-line tool to talk to the cluster. Pronounced "kube-control" or "kube-c-t-l".</div></div>
+      </div>
+      <h3 class="sub">Minikube — a cluster on your laptop</h3>
+      <p>For learning, we use <strong>minikube</strong>, which spins up a single-node Kubernetes cluster locally inside a VM or container. It gives you a real Kubernetes environment without needing cloud infrastructure.</p>
+      <div class="code-block">
+<span class="code-comment"># Start a local cluster</span>
+<span class="cmd">minikube start</span>
+
+<span class="code-comment"># Check cluster info</span>
+<span class="cmd">kubectl cluster-info</span>
+
+<span class="code-comment"># See the nodes in your cluster</span>
+<span class="cmd">kubectl get nodes</span>
+      </div>
+      <div class="tip"><span class="tip-text">Expected output of "kubectl get nodes": one node named "minikube" with status "Ready".</span></div>
+      <div class="analogy">
+        <div class="analogy-label">Mental model</div>
+        <p>Think of the control plane as the HR/management team, and worker nodes as employees. HR decides who does what; employees do the actual work. kubectl is your phone call to HR.</p>
+      </div>
+
+      <div class="q-section">
+        <div class="q-header"><i class="ti ti-help-circle" aria-hidden="true" style="font-size:16px;color:var(--text-warning);"></i><span>Scenario questions — Section 1</span></div>
+        <div class="q-body">
+          <div class="q-item"><div class="q-num">Scenario A</div><div class="q-text">Your company runs a Node.js app on a single server. During a product launch, the server crashes and the app goes down for 2 hours. How would having a Kubernetes cluster with 3 worker nodes have changed this outcome?</div></div>
+          <div class="q-item"><div class="q-num">Scenario B</div><div class="q-text">A teammate runs <code>kubectl get nodes</code> and sees the node status as "NotReady". What component on the worker node would you investigate first, and why?</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section">
+    <div class="section-header s2">
+      <span class="toc-num s2" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;">2</span>
+      <h2 class="section-title">Deploy an app</h2>
+    </div>
+    <div class="section-body">
+      <p>Now that you have a cluster, it's time to run something on it. You do this by creating a <strong>Deployment</strong>.</p>
+      <h3 class="sub">Key concepts</h3>
+      <div class="concept-grid">
+        <div class="concept-card"><div class="term">Pod</div><div class="def">The smallest unit in Kubernetes. A pod wraps one (or more) containers and runs on a node. Think of it as one running instance of your app.</div></div>
+        <div class="concept-card"><div class="term">Deployment</div><div class="def">A higher-level object that manages pods. You tell it "I want 3 copies of this pod" and it creates, monitors, and restarts them.</div></div>
+        <div class="concept-card"><div class="term">ReplicaSet</div><div class="def">What the Deployment creates behind the scenes to maintain the right number of pod copies. You rarely touch this directly.</div></div>
+      </div>
+      <div class="analogy">
+        <div class="analogy-label">Analogy</div>
+        <p>A Pod is one waiter in a restaurant. A Deployment is the manager who says "we always need 3 waiters on the floor — if one quits, hire another immediately."</p>
+      </div>
+      <h3 class="sub">Deploying with kubectl</h3>
+      <div class="code-block">
+<span class="code-comment"># Deploy an app using a public image</span>
+<span class="cmd">kubectl create deployment hello-node \
+  --image=registry.k8s.io/e2e-test-images/agnhost:2.39 \
+  -- /agnhost netexec --http-port=8080</span>
+
+<span class="code-comment"># See the deployment</span>
+<span class="cmd">kubectl get deployments</span>
+
+<span class="code-comment"># See the pods it created</span>
+<span class="cmd">kubectl get pods</span>
+      </div>
+      <h3 class="sub">What happens behind the scenes</h3>
+      <div class="step-row"><span class="step-dot blue">1</span><span class="step-text">You run <code>kubectl create deployment</code> — this sends a request to the API server.</span></div>
+      <div class="step-row"><span class="step-dot blue">2</span><span class="step-text">The control plane stores the desired state in etcd: "1 pod, this image".</span></div>
+      <div class="step-row"><span class="step-dot blue">3</span><span class="step-text">The scheduler picks a worker node that has available resources.</span></div>
+      <div class="step-row"><span class="step-dot blue">4</span><span class="step-text">The kubelet on that node pulls the image and starts the container.</span></div>
+      <div class="step-row"><span class="step-dot blue">5</span><span class="step-text">The pod appears as "Running". Kubernetes will keep it running forever — if it crashes, it restarts automatically.</span></div>
+      <div class="tip"><span class="tip-text">Self-healing in action: kill a pod manually with "kubectl delete pod &lt;name&gt;" — a new one appears within seconds because the Deployment says "I need 1 pod".</span></div>
+
+      <div class="q-section">
+        <div class="q-header"><i class="ti ti-help-circle" aria-hidden="true" style="font-size:16px;color:var(--text-warning);"></i><span>Scenario questions — Section 2</span></div>
+        <div class="q-body">
+          <div class="q-item"><div class="q-num">Scenario A</div><div class="q-text">You deploy an app and the pod status shows "ImagePullBackOff". What does this mean, and what is the most likely cause?</div></div>
+          <div class="q-item"><div class="q-num">Scenario B</div><div class="q-text">Your team is debating whether to put a web server and a database in the same pod, or separate pods. What would you recommend and why? (Hint: think about scaling independently.)</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section">
+    <div class="section-header s3">
+      <span class="toc-num s3" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;">3</span>
+      <h2 class="section-title">Explore your app</h2>
+    </div>
+    <div class="section-body">
+      <p>Your app is running — but how do you see what's happening inside? Kubernetes gives you several inspection tools.</p>
+      <h3 class="sub">Inspecting pods and deployments</h3>
+      <div class="code-block">
+<span class="code-comment"># List all pods with extra details (node, IP, age)</span>
+<span class="cmd">kubectl get pods -o wide</span>
+
+<span class="code-comment"># Deep-dive into one pod — events, status, container info</span>
+<span class="cmd">kubectl describe pod &lt;pod-name&gt;</span>
+
+<span class="code-comment"># Read the logs from inside a pod (like docker logs)</span>
+<span class="cmd">kubectl logs &lt;pod-name&gt;</span>
+
+<span class="code-comment"># Open an interactive shell inside a running pod</span>
+<span class="cmd">kubectl exec -it &lt;pod-name&gt; -- /bin/bash</span>
+
+<span class="code-comment"># Forward a pod port to your local machine (quick local access)</span>
+<span class="cmd">kubectl port-forward &lt;pod-name&gt; 8080:8080</span>
+      </div>
+      <h3 class="sub">Reading kubectl describe output</h3>
+      <p>The <code>describe</code> command is your best debugging friend. Key things to look at:</p>
+      <div class="concept-grid">
+        <div class="concept-card"><div class="term">Events section</div><div class="def">Shows what Kubernetes did recently — pulled image, scheduled, started, or any errors.</div></div>
+        <div class="concept-card"><div class="term">State</div><div class="def">Running, Waiting, or Terminated. "Waiting" with a reason tells you what's wrong.</div></div>
+        <div class="concept-card"><div class="term">Restart Count</div><div class="def">If this is non-zero, your container is crashing and restarting — called a "CrashLoopBackOff".</div></div>
+        <div class="concept-card"><div class="term">Conditions</div><div class="def">Ready, PodScheduled, ContainersReady — all should be True for a healthy pod.</div></div>
+      </div>
+      <div class="tip"><span class="tip-text">Port-forwarding is great for testing. It creates a temporary tunnel from your laptop to the pod — no need to expose it publicly yet.</span></div>
+
+      <div class="q-section">
+        <div class="q-header"><i class="ti ti-help-circle" aria-hidden="true" style="font-size:16px;color:var(--text-warning);"></i><span>Scenario questions — Section 3</span></div>
+        <div class="q-body">
+          <div class="q-item"><div class="q-num">Scenario A</div><div class="q-text">A pod has been "Running" for 2 days but users are reporting errors. Which kubectl command would you run first to investigate, and what would you look for?</div></div>
+          <div class="q-item"><div class="q-num">Scenario B</div><div class="q-text">A pod shows "Restart Count: 47" — the app keeps crashing. Walk through the exact commands you'd use to diagnose why.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section">
+    <div class="section-header s4">
+      <span class="toc-num s4" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;">4</span>
+      <h2 class="section-title">Expose your app publicly</h2>
+    </div>
+    <div class="section-body">
+      <p>By default, pods are only reachable within the cluster — they have an internal IP that no one outside can hit. To make your app accessible, you create a <strong>Service</strong>.</p>
+      <div class="analogy">
+        <div class="analogy-label">Analogy</div>
+        <p>A Service is like a receptionist at a company — callers don't need to know which specific employee (pod) will handle their request. They just call the front desk (the Service), and the receptionist routes them.</p>
+      </div>
+      <h3 class="sub">Types of Services</h3>
+      <div class="concept-grid">
+        <div class="concept-card"><div class="term">ClusterIP (default)</div><div class="def">Accessible only inside the cluster. Good for internal communication between services (e.g., app → database).</div></div>
+        <div class="concept-card"><div class="term">NodePort</div><div class="def">Exposes the service on each node's IP at a static port (30000–32767). Reachable from outside the cluster.</div></div>
+        <div class="concept-card"><div class="term">LoadBalancer</div><div class="def">Provisions an external load balancer (from your cloud provider). The "production-ready" way to expose apps.</div></div>
+        <div class="concept-card"><div class="term">Ingress</div><div class="def">Not a Service type, but a smart router that maps URLs/paths to Services. Used for routing multiple apps at once.</div></div>
+      </div>
+      <h3 class="sub">Exposing with kubectl</h3>
+      <div class="code-block">
+<span class="code-comment"># Expose a deployment as a NodePort service</span>
+<span class="cmd">kubectl expose deployment hello-node \
+  --type=NodePort \
+  --port=8080</span>
+
+<span class="code-comment"># List services</span>
+<span class="cmd">kubectl get services</span>
+
+<span class="code-comment"># In minikube, open the service in a browser</span>
+<span class="cmd">minikube service hello-node</span>
+      </div>
+      <div class="tip"><span class="tip-text">Services use label selectors to find pods — not names or IPs. This is why you can delete and recreate pods and the Service still routes to them correctly.</span></div>
+
+      <div class="q-section">
+        <div class="q-header"><i class="ti ti-help-circle" aria-hidden="true" style="font-size:16px;color:var(--text-warning);"></i><span>Scenario questions — Section 4</span></div>
+        <div class="q-body">
+          <div class="q-item"><div class="q-num">Scenario A</div><div class="q-text">You're building a microservices app with a frontend, a backend API, and a database. Which Service type would you use for each, and why?</div></div>
+          <div class="q-item"><div class="q-num">Scenario B</div><div class="q-text">You delete all pods in a deployment and create new ones. Users say the app is still reachable. Why doesn't the Service break when the pods underneath it are replaced?</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section">
+    <div class="section-header s5">
+      <span class="toc-num s5" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;">5</span>
+      <h2 class="section-title">Scale your app</h2>
+    </div>
+    <div class="section-body">
+      <p>One of Kubernetes' core powers is the ability to run multiple identical copies of your app — called <strong>replicas</strong> — and balance traffic across all of them.</p>
+      <h3 class="sub">Scaling manually</h3>
+      <div class="code-block">
+<span class="code-comment"># Scale up to 4 replicas</span>
+<span class="cmd">kubectl scale deployment hello-node --replicas=4</span>
+
+<span class="code-comment"># Watch the pods appear in real time</span>
+<span class="cmd">kubectl get pods -w</span>
+
+<span class="code-comment"># Scale back down</span>
+<span class="cmd">kubectl scale deployment hello-node --replicas=2</span>
+      </div>
+      <p>When you scale to 4 replicas, Kubernetes creates 3 new pods. Your Service automatically routes incoming requests across all 4 pods using round-robin load balancing — no extra config needed.</p>
+      <h3 class="sub">Autoscaling (HPA)</h3>
+      <p>Manually scaling is fine for demos — in production you'd use a <strong>Horizontal Pod Autoscaler (HPA)</strong>, which watches CPU/memory and scales automatically.</p>
+      <div class="code-block">
+<span class="code-comment"># Auto-scale between 2 and 10 replicas based on CPU</span>
+<span class="cmd">kubectl autoscale deployment hello-node \
+  --cpu-percent=50 \
+  --min=2 \
+  --max=10</span>
+      </div>
+      <div class="concept-grid">
+        <div class="concept-card"><div class="term">Horizontal scaling</div><div class="def">Add more copies of the pod. Best for stateless apps. This is what Kubernetes does natively.</div></div>
+        <div class="concept-card"><div class="term">Vertical scaling</div><div class="def">Give the pod more CPU/RAM. Requires a restart. K8s has a VPA for this, but it's less common.</div></div>
+      </div>
+      <div class="tip"><span class="tip-text">Scaling only works well for stateless apps — where any pod can handle any request. If your app stores session data in memory, users might hit different pods and lose their session.</span></div>
+
+      <div class="q-section">
+        <div class="q-header"><i class="ti ti-help-circle" aria-hidden="true" style="font-size:16px;color:var(--text-warning);"></i><span>Scenario questions — Section 5</span></div>
+        <div class="q-body">
+          <div class="q-item"><div class="q-num">Scenario A</div><div class="q-text">An e-commerce site expects 10x traffic on Black Friday. How would you use Kubernetes scaling to prepare for this — and how would you scale back down afterwards to save costs?</div></div>
+          <div class="q-item"><div class="q-num">Scenario B</div><div class="q-text">Your team scaled to 10 replicas but some users are still getting inconsistent results — sometimes they're logged in, sometimes not. What's likely wrong, and what's the fix?</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section">
+    <div class="section-header s6">
+      <span class="toc-num s6" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;">6</span>
+      <h2 class="section-title">Update your app</h2>
+    </div>
+    <div class="section-body">
+      <p>Updating an app in production is risky — you don't want downtime while the old version shuts down and the new one starts. Kubernetes solves this with <strong>rolling updates</strong>.</p>
+      <h3 class="sub">How rolling updates work</h3>
+      <div class="step-row"><span class="step-dot red">1</span><span class="step-text">You update the image in the Deployment to the new version.</span></div>
+      <div class="step-row"><span class="step-dot red">2</span><span class="step-text">Kubernetes creates one new pod with the new version.</span></div>
+      <div class="step-row"><span class="step-dot red">3</span><span class="step-text">Once the new pod is healthy ("Ready"), it terminates one old pod.</span></div>
+      <div class="step-row"><span class="step-dot red">4</span><span class="step-text">This repeats until all old pods are replaced. Traffic is always being served.</span></div>
+      <p style="margin-top:1rem;">By default, Kubernetes ensures at least 75% of pods are available at all times during an update. At no point is your app completely down.</p>
+      <h3 class="sub">Updating and rolling back</h3>
+      <div class="code-block">
+<span class="code-comment"># Update the image to a new version</span>
+<span class="cmd">kubectl set image deployment/hello-node \
+  hello-node=&lt;new-image:version&gt;</span>
+
+<span class="code-comment"># Watch the rollout happen</span>
+<span class="cmd">kubectl rollout status deployment/hello-node</span>
+
+<span class="code-comment"># See rollout history</span>
+<span class="cmd">kubectl rollout history deployment/hello-node</span>
+
+<span class="code-comment"># Something went wrong? Roll back instantly</span>
+<span class="cmd">kubectl rollout undo deployment/hello-node</span>
+      </div>
+      <h3 class="sub">Update strategies</h3>
+      <div class="concept-grid">
+        <div class="concept-card"><div class="term">RollingUpdate (default)</div><div class="def">Gradually replaces old pods with new ones. Zero downtime. The right choice for most apps.</div></div>
+        <div class="concept-card"><div class="term">Recreate</div><div class="def">Kills all old pods first, then creates new ones. Has downtime. Only use if old and new versions can't run at the same time.</div></div>
+        <div class="concept-card"><div class="term">maxSurge</div><div class="def">How many extra pods can exist above the desired count during an update. Default: 25%.</div></div>
+        <div class="concept-card"><div class="term">maxUnavailable</div><div class="def">How many pods can be offline during an update. Default: 25%.</div></div>
+      </div>
+      <div class="tip"><span class="tip-text">Rollbacks are instant — Kubernetes remembers previous ReplicaSets. "kubectl rollout undo" switches traffic back in seconds, not minutes.</span></div>
+
+      <div class="q-section">
+        <div class="q-header"><i class="ti ti-help-circle" aria-hidden="true" style="font-size:16px;color:var(--text-warning);"></i><span>Scenario questions — Section 6</span></div>
+        <div class="q-body">
+          <div class="q-item"><div class="q-num">Scenario A</div><div class="q-text">You push a new version of your app and immediately notice the error rate spike in your monitoring dashboard. What single command do you run, and what does Kubernetes do in the next 30 seconds?</div></div>
+          <div class="q-item"><div class="q-num">Scenario B</div><div class="q-text">Your app's new version has a database schema change that is incompatible with the old version. Why is a RollingUpdate potentially dangerous here, and which strategy would you use instead?</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
